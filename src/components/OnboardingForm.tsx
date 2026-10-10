@@ -1,0 +1,13 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { indianStates } from "@/lib/validation";
+export function OnboardingForm(){const router=useRouter();const[busy,setBusy]=useState(false);const[error,setError]=useState("");async function submit(e:React.FormEvent<HTMLFormElement>){e.preventDefault();setBusy(true);setError("");const form=new FormData(e.currentTarget);const body={...Object.fromEntries(form.entries()),acceptedTerms:true};try{const response=await fetch("/api/profile",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const result=await response.json();if(!response.ok){setError(result.error??"Please review your details.");return}router.replace("/dashboard");router.refresh()}catch{setError("We couldn’t reach the server. Try again in a moment.")}finally{setBusy(false)}}return <form onSubmit={submit}>
+  <div className="auth-grid"><div className="field"><label htmlFor="fullName">Full name</label><input id="fullName" name="fullName" autoComplete="name" minLength={2} required/></div><div className="field"><label htmlFor="mobileNumber">Mobile number</label><input id="mobileNumber" name="mobileNumber" inputMode="numeric" autoComplete="tel-national" pattern="[6-9][0-9]{9}" maxLength={10} placeholder="10-digit Indian number" required/></div></div>
+  <div className="field"><label htmlFor="address">Full residential address</label><input id="address" name="address" autoComplete="street-address" minLength={8} maxLength={300} required/></div>
+  <div className="auth-grid"><div className="field"><label htmlFor="city">City</label><input id="city" name="city" autoComplete="address-level2" minLength={2} required/></div><div className="field"><label htmlFor="state">State or union territory</label><select id="state" name="state" defaultValue="" required><option value="" disabled>Choose a state</option>{indianStates.map(s=><option key={s} value={s}>{s}</option>)}</select></div></div>
+  <div className="field"><label htmlFor="pinCode">PIN code</label><input id="pinCode" name="pinCode" inputMode="numeric" autoComplete="postal-code" pattern="[1-9][0-9]{5}" maxLength={6} required/></div>
+  <label className="terms-row"><input type="checkbox" required/><span>I agree to the <Link href="/terms">Terms</Link> and <Link href="/privacy">Privacy Policy</Link>.</span></label><button className="auth-submit" disabled={busy}>{busy?"Preparing your space…":<>Open my workspace <ArrowRight size={15}/></>}</button>{error&&<div className="auth-message auth-error" role="alert">{error}</div>}
+  </form>}

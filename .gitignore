@@ -1,0 +1,30 @@
+node_modules/
+.next/
+out/
+coverage/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+
+# Local credentials and personal workspace files
+*.pem
+*.key
+*.p12
+*.pfx
+*.log
+*.db
+*.sqlite*
+*.sql.gz
+.env.local*
+.codex/
+.agents/
+.aws/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+# Local assistant notes and asset-generation records
+AGENTS.md
+public/images/GENERATED-ASSETS.md
